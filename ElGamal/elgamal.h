@@ -3,7 +3,8 @@
 
 #include "../BigInt/bigint.h"
 #include <iostream>
+#include <bitset>
 
-    void modExp(bigint num);
+    bigint modExp(bigint base, bigint exp, bigint modulus);
 
 #endif

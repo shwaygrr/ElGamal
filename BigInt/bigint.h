@@ -56,7 +56,6 @@
 #define big_isPrime bigint::_big_isPrime
 #define big_isPalindrome bigint::_big_isPalindrome
 #define to_bigint bigint::_to_bigint
-
 // Big Integer Class
 
 class bigint {
@@ -139,12 +138,15 @@ class bigint {
         /* Operator {+} Overloadings, for different kind of 
         parameter for the programmer's convinience  */
 
+        /****Temporarily Redundant**** 
         inline bigint operator + (bigint const &n) {
             bigint ans;
             ans.str = add(str, n.str);
             return ans;
-        }        
-         inline friend bigint operator + (bigint const &n1, int n2) {
+        }
+        */
+
+        inline friend bigint operator + (bigint const &n1, int n2) {
             bigint ans;
             ans.str = add(n1.str, std::to_string(n2));
             return ans;
@@ -326,12 +328,13 @@ class bigint {
 
         /* Operator {%} Overloadings, for different kind of 
         parameter for the programmer's convinience  */
-
+        
         inline bigint operator % (bigint const &n) {
             bigint ans;
             ans.str = mod(str, n.str);
             return ans;
         }
+
         inline friend bigint operator % (bigint const &n1, int n2) {
             bigint ans;
             ans.str = mod(n1.str, std::to_string(n2));
@@ -509,9 +512,12 @@ class bigint {
         /* Operator {==} Overloadings, for different kind of 
         parameter for the programmer's convinience  */
 
+        /***Temporarily redundant***
         inline bool operator ==(bigint const &n) {
             return (*this).str == n.str;
         }
+        ***/
+       
         inline friend bool operator == (bigint const &n1, int n2) {
             return n1.str == std::to_string(n2);
         }
@@ -535,9 +541,12 @@ class bigint {
         /* Operator {!=} Overloadings, for different kind of 
         parameter for the programmer's convinience  */
 
+        /****Temporarily redundant***
         inline bool operator !=(bigint const &n) {
             return (*this).str != n.str;
         }
+        */
+
         inline friend bool operator != (bigint const &n1, int n2) {
             return n1.str != std::to_string(n2);
         }
@@ -663,6 +672,11 @@ class bigint {
             bigint ans;
             ans.str = std::to_string(n);
             return ans;
+        }
+
+        //convert to string (getter)
+        inline std::string as_str() {
+            return str;
         }
 
 };
