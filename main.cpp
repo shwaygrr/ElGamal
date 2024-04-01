@@ -5,8 +5,11 @@ int main() {
 
     // std::cout << a - 2000;
     // std::cout << modExp(12, 2, modulus);
-    for(int i = 0; i < 10; i++)
-        std::cout << randNumGen(256) << std::endl;
+    for(int i = 1; i < 5; i++) 
+    //     bigint num = randNumGen(3);
+    //     std::cout << num << " - " << num._big_isPrime << std::endl;
+    // }
+    std::cout << randPrimeGen(3) << std::endl;; 
     return 0;
 }
 

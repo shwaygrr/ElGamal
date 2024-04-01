@@ -138,13 +138,12 @@ class bigint {
         /* Operator {+} Overloadings, for different kind of 
         parameter for the programmer's convinience  */
 
-        /****Temporarily Redundant**** 
+
         inline bigint operator + (bigint const &n) {
             bigint ans;
             ans.str = add(str, n.str);
             return ans;
         }
-        */
 
         inline friend bigint operator + (bigint const &n1, int n2) {
             bigint ans;
@@ -189,13 +188,11 @@ class bigint {
         /* Operator {-} Overloadings, for different kind of 
         parameter for the programmer's convinience  */
 
-        /***Temporarily redundant**
         inline bigint operator - (bigint const &n) {
             bigint ans;
             ans.str = subtract(str, n.str);
             return ans;
         }
-        */
        
         inline friend bigint operator - (bigint const &n1, int n2) {
             bigint ans;
@@ -512,11 +509,9 @@ class bigint {
         /* Operator {==} Overloadings, for different kind of 
         parameter for the programmer's convinience  */
 
-        /***Temporarily redundant***
         inline bool operator ==(bigint const &n) {
             return (*this).str == n.str;
         }
-        ***/
        
         inline friend bool operator == (bigint const &n1, int n2) {
             return n1.str == std::to_string(n2);
@@ -596,7 +591,7 @@ class bigint {
             ans.str = sqrt(a.str);
             return ans;
         }
-        inline static bigint _big_log2(bigint &a) {                // returns the log of Big Integer to the base of 2.
+        inline static bigint _big_log2(const bigint &a) {                // returns the log of Big Integer to the base of 2.
             bigint ans;
             ans.str = log2(a.str);
             return ans;
@@ -675,7 +670,7 @@ class bigint {
         }
 
         //convert to string (getter)
-        inline std::string as_str() {
+        inline std::string as_str() const {
             return str;
         }
 
@@ -1348,18 +1343,6 @@ inline bool bigint::isPalindrome(std::string s) {                  // checks if 
             return false;
         beg++;
         end--;
-    }
-    return true;
-}
-
-inline bool bigint::isPrime(std::string s) {                // checks if the String as Number is prime or n
-    if(maximum(s, "2") != s)
-        return false;
-    std::string sqrt = bigint::sqrt(s);
-    std::string i = "";
-    for(i = "2"; is_maximum(sqrt, i); i = add(i, "1")) {
-        if(mod(s, i) == "0")
-            return false;
     }
     return true;
 }
