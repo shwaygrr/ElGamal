@@ -94,28 +94,8 @@ bigint randOddNumGen(unsigned int size){
         - output: random number between min and max inclusive
         https://en.cppreference.com/w/cpp/numeric/random/uniform_int_distribution
 */
-// bigint randNumGen(const int min, const bigint& max) {
-
-// 	std::random_device rd;  // a seed source for the random number engine
-//     std::mt19937 gen(rd()); // mersenne_twister_engine seeded with rd()
-    
-//     std::uniform_int_distribution<unsigned short int> distrib(0,1);
-	
-//     std::string max_bit_size = (big_log2(max)+1).as_str();
-//     std::string binary_str = "0";
-
-//     while (binaryToDecimal(binary_str) < min || binaryToDecimal(binary_str) > max) {
-//         binary_str = "";
-    
-//         for (int i = 0; i < std::stoi(max_bit_size); i++) {
-//             binary_str += std::to_string(distrib(gen));
-//         }
-//     }
-
-//     return binaryToDecimal(binary_str); //converted to int
-// }
 bigint randNumGen(const int min, const bigint& max) {
-    // Error handling
+    //error handling
     if (min >= max) {
         throw std::invalid_argument("min must be less than max");
     }
@@ -167,7 +147,7 @@ bigint randPrimeGen(unsigned int size) {
     
     do {
         rand_num = randOddNumGen(size);
-    } while(fermatsPrimeTest(rand_num, 50)== false );
+    } while(fermatsPrimeTest(rand_num, 50) == false );
     
     return rand_num;
 }
@@ -209,35 +189,84 @@ std::set<bigint> primeFact(bigint num) {
 bigint randGenerator(const bigint& prime) {
     std::set<bigint> prime_factors = primeFact(prime-1);
 
-    std::cout << "prime factors: " ;
-    for (const bigint& prime_factor : prime_factors) {
-        std::cout << prime_factor << " ";
-    }
-
-    std::cout << std::endl;
-
-    bigint b = 1;
-
     bigint alpha;
+    bigint b;
 
-    while (b == 1) {
+    do {
         alpha = randNumGen(2, prime - 1);
 
         for (const bigint& prime_factor : prime_factors) {
             b = modExp(alpha, (prime-1)/prime_factor, prime);
-            if (b == 1) {
-                std::cout << alpha << " is not a generator" <<  std::endl;
-                break;
-            };
+            if (b == 1) break;
         }
-    }
+    } while (b == 1);
 
     return alpha;
 }
 
+/*
+    Key Generation
+        -Input: -
+        -Output: 
+*/
+void keyGen(bigint& prime, bigint& alpha, bigint& alpha_exp_priv) {
+    
+    //generate large prime
+    unsigned int size;
+    std::cout << "Choose bit size (must be larger than message): ";
+    std::cin >> size;
+
+    prime = randPrimeGen(size);
+
+    //get generator
+    alpha = randGenerator(prime);
+
+    //calculate alpha^a mod p
+    bigint priv_key = randNumGen(1, prime-2);
+    
+    std::cout << "The private key is: " << priv_key << std::endl;
+
+    alpha_exp_priv = modExp(alpha, priv_key, prime);
+
+    std::cout << "The public key is: " << std::endl
+        << "\tp: " << prime << std::endl
+        << "\tα: " << alpha << std::endl
+        << "\tα^a: " << alpha << std::endl;       
+}
 
 
+/*
+    Encryption
+        Input: message as integer
+        Output: ciphertext as integer
+*/
+void encryption(const bigint& message) {
+    bigint prime, alpha, alpha_exp_priv; //make global
 
+    //generate keys
+    keyGen(prime, alpha, alpha_exp_priv);
+    
+    bigint k = randNumGen(1, prime-2);
+
+    //gamma and delta
+    bigint gamma = modExp(alpha, k, prime);
+    bigint delta = message * modExp(alpha, alpha*k, prime);
+
+    std::cout << "Ciphertext: " << std::endl
+        <<"\tγ: " << gamma << std::endl
+        << "\tδ: " << delta << std::endl;
+}
+
+
+/*
+    Decryption
+        Input: ciphertext as integer
+        Output: message as integer
+*/
+void decryption(bigint gamma, bigint delta, bigint priv_key, bigint prime, bigint alpha) {
+    bigint ciphertext  = modExp(gamma, prime-1-alpha, prime);
+    std::cout << "Message: " << ciphertext;
+}
 //random number between 1 and p **private key**
 
 //get primitive root of p **allows every number between 1 and p to have equal chance of appearing**

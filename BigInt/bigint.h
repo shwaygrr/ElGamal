@@ -235,7 +235,7 @@ class bigint {
         /* Operator {*} Overloadings, for different kind of 
         parameter for the programmer's convinience  */
 
-        inline bigint operator * (bigint const &n) {
+        inline bigint operator * (bigint const &n) const {
             bigint ans;
             ans.str = multiply(str, n.str);
             return ans;

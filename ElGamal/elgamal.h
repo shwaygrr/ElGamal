@@ -11,6 +11,7 @@
 #include <string>
 #include <set>
 #include <algorithm>
+#include <tuple>
     //helper functions
     bigint modExp(const bigint& base, bigint exp, const bigint& modulus);
     bigint binaryToDecimal(const std::string& binary_str);
@@ -19,6 +20,8 @@
     bool fermatsPrimeTest(const bigint& odd_int, unsigned int t); //test if integer is prime
     std::set<bigint> primeFact(bigint num);
     bigint randGenerator(const bigint& prime);
+    void keyGen(bigint& prime, bigint& alpha, bigint& alpha_exp_priv);
+    void encryption(const bigint& message);
 
     bigint randPrimeGen(unsigned int size);
 #endif
