@@ -267,8 +267,70 @@ void decryption(bigint gamma, bigint delta, bigint priv_key, bigint prime, bigin
     bigint ciphertext  = modExp(gamma, prime-1-alpha, prime);
     std::cout << "Message: " << ciphertext;
 }
-//random number between 1 and p **private key**
 
-//get primitive root of p **allows every number between 1 and p to have equal chance of appearing**
+/*
+    String to Integer
+        - Input: string, m
+        - Output: interger representation of m (using ASCII)
+*/
+bigint toInt(const std::string& message ) {
+    std::cout << static_cast<int>(message [0]); 
+
+    return 1;
+}
+
+
+
+/*
+    Text to Integer
+        -Input: Text as string
+        -Ouput: Integer as string 
+*/
+std::string textToInt(const std::string& text) {
+    std::string result;
+    std::string len_sequence;
+    
+    for (char c : text) {
+        std::string ascii = std::to_string(static_cast<int>(c)); 
+        
+        result += ascii;
+        len_sequence += std::to_string(ascii.length());
+    }
+    
+    std::reverse(len_sequence.begin(), len_sequence.end());
+    
+    return result + len_sequence; // Return a vector with two strings
+}
+
+
+/*
+    Integer to String
+        -Input: Integer as string
+        -Output: String as Integer
+*/
+std::string intToText(const std::string& integer) {
+    //produce true ascii
+    int begin = 0;
+    int end = integer.length()-1;
+    
+    std::string true_ascii = "";
+    while (begin < end) {
+        int ascii_len = static_cast<int>(integer[end] - '0');
+        true_ascii += integer.substr(begin, ascii_len) + " ";
+        begin += ascii_len;
+        end--;
+    }
+    
+    //ascii to text
+    std::string result;
+    std::istringstream iss(true_ascii);
+    std::string token;
+    while (iss >> token) { // Using operator >> to extract tokens
+        int ascii = std::stoi(token);
+        result += static_cast<char>(ascii);
+    }
+    
+    return result;
+}
 
 
