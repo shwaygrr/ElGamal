@@ -5,7 +5,7 @@ This project implements the ElGamal Public-Key Encryption scheme in C++ using th
 
 ## Implementation Details
 - Language: C++11 or older
-- [BigInt](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+- [BigInt](https://github.com/rgroshanrg/bigint?tab=readme-ov-file)
 
 
 ## Files and Folders Included
