@@ -20,7 +20,7 @@ int main() {
             bigint message_int = textToInt(message);
             //encrypt message
             encryption(message_int);
-            prompt = 'h';
+            // prompt = 'h';
         } else if (prompt == 'D') {
             std::string gamma, delta;
 

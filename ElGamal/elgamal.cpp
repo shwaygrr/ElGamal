@@ -208,10 +208,10 @@ void keyGen(const bigint& message) {
     std::cout << "Choose bit size larger than " << big_log2(message)+1 << " bits: ";
     std::cin >> size;
 
-    do {
+    while (size <= big_log2(message)+1) {
         std::cout << size <<" bits is not enough. Choose bit size larger than " << big_log2(message)+1 << " bits: ";
         std::cin >> size;
-    } while (size <= big_log2(message)+1);
+    }
     
     std::cin.ignore();
 
