@@ -1,5 +1,8 @@
 #include "elgamal.h"
 
+//public key
+bigint prime, alpha, alpha_exp_priv;
+
 bigint modExp(const bigint& base, bigint exp, const bigint& modulus) {
     bigint result = 1;
 
@@ -95,6 +98,8 @@ bigint randOddNumGen(unsigned int size){
         https://en.cppreference.com/w/cpp/numeric/random/uniform_int_distribution
 */
 bigint randNumGen(const int min, const bigint& max) {
+    std::cout << "Generating random number...";
+
     //error handling
     if (min >= max) {
         throw std::invalid_argument("min must be less than max");
@@ -117,6 +122,7 @@ bigint randNumGen(const int min, const bigint& max) {
         rand_num = binaryToDecimal(binary_str);
     } while (rand_num < min || rand_num > max);
 
+    std::cout << std::endl;
     return rand_num;
 }
 
@@ -143,12 +149,16 @@ bool fermatsPrimeTest(const bigint& odd_num, unsigned int t) {
         -Output: prime number of bitsize n tested by fermat
 */
 bigint randPrimeGen(unsigned int size) {
+    std::cout << "Generating random prime...";
+
     bigint rand_num;
     
     do {
         rand_num = randOddNumGen(size);
     } while(fermatsPrimeTest(rand_num, 50) == false );
     
+    std::cout << std::endl;
+
     return rand_num;
 }
 
@@ -159,6 +169,7 @@ bigint randPrimeGen(unsigned int size) {
         Output: prime factorizaton
 */
 std::set<bigint> primeFact(bigint num) {
+    std::cout << "Factoring p-1...";
     std::set<bigint> factors;
 
     //reduce until odd
@@ -177,7 +188,8 @@ std::set<bigint> primeFact(bigint num) {
     
     //if num is a prime greater than 2
     if (num > 2) factors.insert(num);
-
+    
+    std::cout << std::endl;
     return factors;
 }
 
@@ -187,6 +199,7 @@ std::set<bigint> primeFact(bigint num) {
         -Output: random primitive root
 */
 bigint randGenerator(const bigint& prime) {
+    std::cout << "Generating random generator (alpha)...";
     std::set<bigint> prime_factors = primeFact(prime-1);
 
     bigint alpha;
@@ -201,20 +214,23 @@ bigint randGenerator(const bigint& prime) {
         }
     } while (b == 1);
 
+    std::cout << std::endl;
     return alpha;
 }
 
 /*
     Key Generation
-        -Input: -
-        -Output: 
+        -Input: message and public key variables to update
+        -Output: prints public key (globally updates public key)
 */
-void keyGen(bigint& prime, bigint& alpha, bigint& alpha_exp_priv) {
-    
+void keyGen(const bigint& message) {
     //generate large prime
     unsigned int size;
-    std::cout << "Choose bit size (must be larger than message): ";
+    std::cout << "Choose bit size larger than " << big_log2(message)+1 << ": ";
     std::cin >> size;
+    std::cin.ignore();
+
+    std::cout << "Generating keys..." << std::endl;
 
     prime = randPrimeGen(size);
 
@@ -224,37 +240,40 @@ void keyGen(bigint& prime, bigint& alpha, bigint& alpha_exp_priv) {
     //calculate alpha^a mod p
     bigint priv_key = randNumGen(1, prime-2);
     
-    std::cout << "The private key is: " << priv_key << std::endl;
+    std::cout << "Your private key is (keep secret): " << priv_key << std::endl;
 
     alpha_exp_priv = modExp(alpha, priv_key, prime);
 
     std::cout << "The public key is: " << std::endl
         << "\tp: " << prime << std::endl
         << "\tα: " << alpha << std::endl
-        << "\tα^a: " << alpha << std::endl;       
+        << "\tα^a: " << alpha_exp_priv << std::endl;       
 }
 
 
 /*
     Encryption
         Input: message as integer
-        Output: ciphertext as integer
+        Output: ciphertext as integers gamm and delta (globally updates public key)
 */
 void encryption(const bigint& message) {
-    bigint prime, alpha, alpha_exp_priv; //make global
-
+    
     //generate keys
-    keyGen(prime, alpha, alpha_exp_priv);
+    keyGen(message);
     
     bigint k = randNumGen(1, prime-2);
 
+    std::cout << "random k: " << k << std::endl;
     //gamma and delta
     bigint gamma = modExp(alpha, k, prime);
-    bigint delta = message * modExp(alpha, alpha*k, prime);
+    // bigint delta = message * modExp(alpha, alpha*k, prime);
+    bigint delta = (message * modExp(alpha_exp_priv, k, prime)) % prime;
 
     std::cout << "Ciphertext: " << std::endl
         <<"\tγ: " << gamma << std::endl
         << "\tδ: " << delta << std::endl;
+
+    // decryption(gamma, delta);
 }
 
 
@@ -263,22 +282,15 @@ void encryption(const bigint& message) {
         Input: ciphertext as integer
         Output: message as integer
 */
-void decryption(bigint gamma, bigint delta, bigint priv_key, bigint prime, bigint alpha) {
-    bigint ciphertext  = modExp(gamma, prime-1-alpha, prime);
-    std::cout << "Message: " << ciphertext;
+std::string decryption(const bigint& gamma, const bigint& delta) {
+    std::string priv_key;
+
+    std::cout << "Enter the private key: ";
+    std::cin >> priv_key;
+
+    // bigint ciphertext  = modExp(gamma, prime-1-priv_key, prime);
+    return ((delta * modExp(gamma, prime-1-priv_key, prime)) % prime).as_str();
 }
-
-/*
-    String to Integer
-        - Input: string, m
-        - Output: interger representation of m (using ASCII)
-*/
-bigint toInt(const std::string& message ) {
-    std::cout << static_cast<int>(message [0]); 
-
-    return 1;
-}
-
 
 
 /*
