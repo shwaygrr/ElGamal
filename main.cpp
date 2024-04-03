@@ -36,9 +36,6 @@ int main() {
     
     } while (prompt == 'E' || prompt == 'D');
 
-    // encryption(4);
-    // std::cout << modExp(7, 8, 11);
-
     return 0;
 
 }

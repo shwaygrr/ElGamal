@@ -204,11 +204,19 @@ bigint randGenerator(const bigint& prime) {
 */
 void keyGen(const bigint& message) {
     //generate large prime
-    unsigned int size;
-    std::cout << "Choose bit size larger than " << big_log2(message)+1 << ": ";
+    int size;
+    std::cout << "Choose bit size larger than " << big_log2(message)+1 << " bits: ";
     std::cin >> size;
+
+    do {
+        std::cout << size <<" bits is not enough. Choose bit size larger than " << big_log2(message)+1 << " bits: ";
+        std::cin >> size;
+    } while (size <= big_log2(message)+1);
+    
     std::cin.ignore();
 
+    if (size > 64) std::cout << "WARNING: Encryption time may be long with the current message size" << std::endl;
+    
     prime = randPrimeGen(size);
 
     //get generator
