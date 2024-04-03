@@ -3,6 +3,7 @@
 //public key
 bigint prime, alpha, alpha_exp_priv;
 
+//helper functions
 bigint modExp(const bigint& base, bigint exp, const bigint& modulus) {
     bigint result = 1;
 
@@ -28,18 +29,6 @@ bigint modExp(const bigint& base, bigint exp, const bigint& modulus) {
 }
 
 
-/*************************************************************************************Key Generation********************************************************************************/
-/*
-    1. get random number of bit size n
-        -ex size = 20 bits 
-    2. test random number
-    3. do 1 and 2 until number is prime
-
-
-
-*/
-
-
 /*
     Binary to Decimal
         - Input: binary string
@@ -63,6 +52,7 @@ bigint binaryToDecimal(const std::string& binary_str) {
 }
 
 
+//key generation functions
 /*
     Random Number Generator
         - input: bit size, size 
@@ -98,8 +88,6 @@ bigint randOddNumGen(unsigned int size){
         https://en.cppreference.com/w/cpp/numeric/random/uniform_int_distribution
 */
 bigint randNumGen(const int min, const bigint& max) {
-    std::cout << "Generating random number...";
-
     //error handling
     if (min >= max) {
         throw std::invalid_argument("min must be less than max");
@@ -122,10 +110,8 @@ bigint randNumGen(const int min, const bigint& max) {
         rand_num = binaryToDecimal(binary_str);
     } while (rand_num < min || rand_num > max);
 
-    std::cout << std::endl;
     return rand_num;
 }
-
 
 
 /*
@@ -149,16 +135,12 @@ bool fermatsPrimeTest(const bigint& odd_num, unsigned int t) {
         -Output: prime number of bitsize n tested by fermat
 */
 bigint randPrimeGen(unsigned int size) {
-    std::cout << "Generating random prime...";
-
     bigint rand_num;
     
     do {
         rand_num = randOddNumGen(size);
     } while(fermatsPrimeTest(rand_num, 50) == false );
     
-    std::cout << std::endl;
-
     return rand_num;
 }
 
@@ -169,7 +151,6 @@ bigint randPrimeGen(unsigned int size) {
         Output: prime factorizaton
 */
 std::set<bigint> primeFact(bigint num) {
-    std::cout << "Factoring p-1...";
     std::set<bigint> factors;
 
     //reduce until odd
@@ -189,9 +170,9 @@ std::set<bigint> primeFact(bigint num) {
     //if num is a prime greater than 2
     if (num > 2) factors.insert(num);
     
-    std::cout << std::endl;
     return factors;
 }
+
 
 /*
     Random generator (primitive root)
@@ -199,7 +180,6 @@ std::set<bigint> primeFact(bigint num) {
         -Output: random primitive root
 */
 bigint randGenerator(const bigint& prime) {
-    std::cout << "Generating random generator (alpha)...";
     std::set<bigint> prime_factors = primeFact(prime-1);
 
     bigint alpha;
@@ -214,7 +194,6 @@ bigint randGenerator(const bigint& prime) {
         }
     } while (b == 1);
 
-    std::cout << std::endl;
     return alpha;
 }
 
@@ -229,8 +208,6 @@ void keyGen(const bigint& message) {
     std::cout << "Choose bit size larger than " << big_log2(message)+1 << ": ";
     std::cin >> size;
     std::cin.ignore();
-
-    std::cout << "Generating keys..." << std::endl;
 
     prime = randPrimeGen(size);
 
@@ -251,6 +228,8 @@ void keyGen(const bigint& message) {
 }
 
 
+
+//encryption/decryption
 /*
     Encryption
         Input: message as integer
@@ -263,7 +242,6 @@ void encryption(const bigint& message) {
     
     bigint k = randNumGen(1, prime-2);
 
-    std::cout << "random k: " << k << std::endl;
     //gamma and delta
     bigint gamma = modExp(alpha, k, prime);
     // bigint delta = message * modExp(alpha, alpha*k, prime);
