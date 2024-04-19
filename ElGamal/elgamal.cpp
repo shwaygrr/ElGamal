@@ -289,7 +289,7 @@ std::string textToInt(const std::string& text) {
     std::string len_sequence;
     
     for (char c : text) {
-        std::string ascii = std::to_string(static_cast<int>(c)); 
+        std::string ascii = std::to_string(static_cast<int>(c-32)); 
         
         result += ascii;
         len_sequence += std::to_string(ascii.length());
@@ -325,7 +325,7 @@ std::string intToText(const std::string& integer) {
     std::string token;
     while (iss >> token) { // Using operator >> to extract tokens
         int ascii = std::stoi(token);
-        result += static_cast<char>(ascii);
+        result += static_cast<char>(ascii+32);
     }
     
     return result;
