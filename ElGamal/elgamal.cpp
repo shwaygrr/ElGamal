@@ -294,9 +294,7 @@ std::string textToInt(const std::string& text) {
         result += ascii;
         len_sequence += std::to_string(ascii.length());
     }
-    
-    std::reverse(len_sequence.begin(), len_sequence.end());
-    
+        
     return result + len_sequence; // Return a vector with two strings
 }
 
