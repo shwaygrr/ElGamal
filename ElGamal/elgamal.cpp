@@ -147,7 +147,7 @@ bigint randPrimeGen(unsigned int size) {
 
 /*
     Prime Factorization
-        input: interger
+        input: integer
         Output: prime factorizaton
 */
 std::set<bigint> primeFact(bigint num) {
