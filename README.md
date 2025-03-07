@@ -15,27 +15,6 @@ This project implements the ElGamal Public-Key Encryption scheme in C++ using th
     - `elgamal.h`: Contains header for libraries included, functions, and public key variables
     - `elgamal.cpp`: Implementation file containing implementation of all ElGamal functions
 - `main.cpp`: Main file implementating the console interface for encryting and decryting messages
-  
-## How to run with VSCode
-1. Open the `main.cpp` directory.
-2. Build and Run
-3. If there is error linking the files
-    1. Open the `tasks.json` file in your Visual Studio Code workspace (`.vscode` directory)
-    2. Ensure that the `args` property within the `"tasks"` array looks like the following:
-        ```json
-            "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "main.cpp",               // Compile main.cpp
-                "ElGamal/elgamal.cpp",    // Compile ElGamal/elgamal.cpp
-                "-I",
-                "BigInt",                 // Include BigInt folder
-                "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
-            ],
-        ```
-    3. Save the `tasks.json` file.
-    4. Build and Run in `main.cpp`
 
 ## How to run with command line
 1. Build: `g++ -o output.exe main.cpp ElGamal/elgamal.cpp -I BigInt -std=c++11`
